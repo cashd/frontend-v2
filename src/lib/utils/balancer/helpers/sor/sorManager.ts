@@ -81,7 +81,36 @@ export class SorManager {
       poolsSourceV1
     );
 
-    this.sorV2 = new SORV2(provider as any, chainId, subgraphUrlV2);
+    const initialPools = [
+      {
+        id: "0xd4d7079e52bf11d394e29e1cca6015ab0283860f000200000000000000000232",
+        address: "0xd4d7079e52bf11d394e29e1cca6015ab0283860f",
+        poolType: "LiquidityBootstrapping",
+        swapFee: "100000",
+        swapEnabled: true,
+        totalShares: "3617436598591000000000000",
+        tokens: [
+          {
+            address: "0x2791bca1f2de4661ed88a30c99a7a9449aa84174",
+            balance: "980998.198627",
+            decimals: 6,
+            priceRate: "1",
+            weight: "371727684672084537"
+          },
+          {
+            address: "0x90f3edc7d5298918f7bb51694134b07356f7d0c7",
+            balance: "1241402.736272140898033848",
+            decimals: 18,
+            priceRate: "1",
+            weight: "628287574414742719"
+          }
+        ],
+        tokensList: ["0x2791bca1f2de4661ed88a30c99a7a9449aa84174", "0x90f3edc7d5298918f7bb51694134b07356f7d0c7"]
+      }
+    ];
+
+    this.sorV2 = new SORV2(provider as any, chainId, subgraphUrlV2, initialPools);
+    // this.sorV2 = new SORV2(provider as any, chainId, subgraphUrlV2);
     this.weth = weth;
     this.gasPrice = gasPrice;
     this.maxPools = maxPools;
@@ -139,7 +168,7 @@ export class SorManager {
     console.time('[SorManager] V2 fetchPools');
     try {
       // Fetch of all pools from V2 subgraph and pull onchain data
-      const v2result = await this.sorV2.fetchPools();
+      const v2result = await this.sorV2.fetchPools([], true);
       this.fetchStatus.v2finishedFetch = true;
       this.fetchStatus.v2success = v2result;
     } catch (err) {
